@@ -107,7 +107,6 @@ public class CalculateSales {
 		if (!writeFile(args[0], FILE_NAME_BRANCH_OUT, branchNames, branchSales)) {
 			return;
 		}
-		return;
 	}
 
 	/**
@@ -146,6 +145,10 @@ public class CalculateSales {
 				//Mapに追加する2つの情報をputの引数として指定
 				branchNames.put(items[0], items[1]);
 				branchSales.put(items[0], 0L);
+				//支店定義ファイルのフォーマットが不正な場合
+				if((items[0].length != 2) || (! items[0].matches())) {
+					System.out.println(FILE_INVALID_FORMAT);
+				}
 			}
 		} catch (IOException e) {
 			System.out.println(UNKNOWN_ERROR);
