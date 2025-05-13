@@ -136,7 +136,6 @@ public class CalculateSales {
 				branchNames.put(items[0], items[1]);
 				branchSales.put(items[0], 0L);
 			}
-
 		} catch (IOException e) {
 			System.out.println(UNKNOWN_ERROR);
 			return false;
@@ -199,8 +198,6 @@ public class CalculateSales {
 				}
 			}
 		}
-
 		return true;
 	}
-
 }
