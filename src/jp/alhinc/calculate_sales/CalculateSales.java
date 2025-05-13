@@ -64,10 +64,11 @@ public class CalculateSales {
 		//rcdFilesに複数の売上ファイルの情報を格納しているので、その数だけ繰り返す
 		for (int i = 0; i < rcdFiles.size(); i++) {
 			FileReader fr = null;
+			BufferedReader br = null;
 			try {
 				File file = rcdFiles.get(i);
 				fr = new FileReader(file);
-				BufferedReader br = new BufferedReader(fr);
+				br = new BufferedReader(fr);
 				String line;
 				//while文が回った数だけ読み取り情報の確認（2行）
 				List<String> list = new ArrayList<>();
@@ -76,12 +77,12 @@ public class CalculateSales {
 				}
 				//売上ファイルから読み込んだ売上金額をMapに加算していくために、型の変換を行います。
 				String branchCode = list.get(0);
-				long filesale = Long.parseLong(list.get(1));
+				long fileSale = Long.parseLong(list.get(1));
 
 				//読み込んだ売上⾦額を加算します。
-				Long Salecode = branchSales.get(branchCode);
+				Long saleCode = branchSales.get(branchCode);
 
-				Long saleAmount = Salecode + filesale;
+				Long saleAmount = saleCode + fileSale;
 
 				//加算した売上⾦額をMapに追加
 				branchSales.put(branchCode, saleAmount);
@@ -89,14 +90,24 @@ public class CalculateSales {
 			} catch (IOException e) {
 				System.out.println(UNKNOWN_ERROR);
 				return;
+			} finally {
+				//ファイルを開いているとき
+				if (br != null) {
+					try {
+						//ファイルを閉じる
+						br.close();
+					} catch (IOException e) {
+						System.out.println(UNKNOWN_ERROR);
+						return;
+					}
+				}
 			}
 		}
-
 		// 支店別集計ファイル書き込み処理
 		if (!writeFile(args[0], FILE_NAME_BRANCH_OUT, branchNames, branchSales)) {
 			return;
 		}
-
+		return;
 	}
 
 	/**
@@ -175,12 +186,7 @@ public class CalculateSales {
 
 			//Mapから全てのKey取得
 			for (String key : branchNames.keySet()) {
-				String name;
-				name = branchNames.get(key);
-				Long sales;
-				sales = branchSales.get(key);
-
-				bw.write(key + "," + name + "," + sales);
+				bw.write(key + "," + branchNames.get(key) + "," + branchSales.get(key));
 				bw.newLine();
 			}
 		} catch (IOException e) {
