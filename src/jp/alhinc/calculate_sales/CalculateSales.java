@@ -107,7 +107,7 @@ public class CalculateSales {
 				long fileSale = Long.parseLong(contents.get(1));
 
 				//Mapに特定のkeyが存在するか確認
-				if (!branchSales.containsKey(contents.get(0))) {
+				if (!branchNames.containsKey(contents.get(0))) {
 					System.out.println("<" + rcdFiles.get(i).getName() + ">の支店コードが不正です");
 					return;
 				}
