@@ -44,10 +44,9 @@ public class CalculateSales {
 
 		//listfilesを使用してfilesという配列に、
 		//指定したパスに存在するすべてのファイル(または、ディレクトリ)も情報を;格納
-		String path = args[0];
-		File[] files = new File(path).listFiles();
+		File[] files = new File(args[0]).listFiles();
 
-		//先にファイルの女王を格納するList(ArrayList)を宣言する
+		//先にファイルの情報を格納するList(ArrayList)を宣言する
 		List<File> rcdFiles = new ArrayList<>();
 
 		//filesの数だけ繰り返すことで、
@@ -59,6 +58,18 @@ public class CalculateSales {
 			if (fileName.matches("^\\d{8}+.rcd$")) {
 				rcdFiles.add(files[i]);
 			}
+			//売上ファイルが連番かどうか確認
+			//for(int j = 0; j<rcdFiles.size() -1; j++) {
+				
+				//int型に変換
+				//int former = Integer.parseInt(files[i].substring(0,8));
+				//int latter = Interger.parseInt(files[i+1].substring(0,8));
+				
+				//if((latter - former) != 1) {
+					System.out.println(UNKNOWN_ERROR);
+				//}
+				
+			//}
 		}
 
 		//rcdFilesに複数の売上ファイルの情報を格納しているので、その数だけ繰り返す
@@ -71,18 +82,16 @@ public class CalculateSales {
 				br = new BufferedReader(fr);
 				String line;
 				//while文が回った数だけ読み取り情報の確認（2行）
-				List<String> list = new ArrayList<>();
+				List<String> contents = new ArrayList<>();
 				while ((line = br.readLine()) != null) {
-					list.add(line);
+					contents.add(line);
 				}
 				//売上ファイルから読み込んだ売上金額をMapに加算していくために、型の変換を行います。
-				String branchCode = list.get(0);
-				long fileSale = Long.parseLong(list.get(1));
+				String branchCode = contents.get(0);
+				long fileSale = Long.parseLong(contents.get(1));
 
 				//読み込んだ売上⾦額を加算します。
-				Long saleCode = branchSales.get(branchCode);
-
-				Long saleAmount = saleCode + fileSale;
+				Long saleAmount = branchSales.get(branchCode) + fileSale;
 
 				//加算した売上⾦額をMapに追加
 				branchSales.put(branchCode, saleAmount);
@@ -146,7 +155,7 @@ public class CalculateSales {
 				branchNames.put(items[0], items[1]);
 				branchSales.put(items[0], 0L);
 				//支店定義ファイルのフォーマットが不正な場合
-				if((items[0].length != 2) || (! items[0].matches())) {
+				if((items.length != 2) || (! items[0].matches("^\\d{3}$"))) {
 					System.out.println(FILE_INVALID_FORMAT);
 				}
 			}
