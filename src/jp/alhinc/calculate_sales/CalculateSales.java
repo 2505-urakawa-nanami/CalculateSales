@@ -60,7 +60,7 @@ public class CalculateSales {
 			return;
 		}
 		//商品定義ファイル読み込み処理
-		if (!readFile(args[0], FILE_NAME_COMMODITY_LST, commodityNames, commoditySales, "商品定義", "^[A-Za-z0-9]{8}")) {
+		if (!readFile(args[0], FILE_NAME_COMMODITY_LST, commodityNames, commoditySales, "商品定義", "^[A-Za-z0-9]{8}$")) {
 			return;
 		}
 
@@ -100,8 +100,6 @@ public class CalculateSales {
 			}
 
 		}
-
-		//private static boolean addSale(Map<String, String> branchNames,Map<String, Long> branchSales,Map<String, String> commodityNames) {
 		//rcdFilesに複数の売上ファイルの情報を格納しているので、その数だけ繰り返す
 		for (int i = 0; i < rcdFiles.size(); i++) {
 			BufferedReader br = null;
@@ -174,7 +172,6 @@ public class CalculateSales {
 				}
 			}
 		}
-		//}
 		// 支店別集計ファイル書き込み処理
 		if (!writeFile(args[0], FILE_NAME_BRANCH_OUT, branchNames, branchSales)) {
 			return;
@@ -196,7 +193,7 @@ public class CalculateSales {
 	 */
 	//支店商品定義ファイルの読み込み共通化
 	private static boolean readFile(String path, String fileName, Map<String, String> names,
-			Map<String, Long> branchSales, String fileError, String codeError) {
+			Map<String, Long> sales, String fileError, String codeError) {
 		BufferedReader br = null;
 
 		try {
@@ -225,7 +222,7 @@ public class CalculateSales {
 
 				//Mapに追加する情報をputの引数として指定
 				names.put(items[0], items[1]);
-				branchSales.put(items[0], 0L);
+				sales.put(items[0], 0L);
 			}
 		} catch (IOException e) {
 			System.out.println(UNKNOWN_ERROR);
@@ -256,7 +253,7 @@ public class CalculateSales {
 	 */
 	//writeFileで共通化
 	private static boolean writeFile(String path, String fileName, Map<String, String> names,
-			Map<String, Long> branchSales) {
+			Map<String, Long> sales) {
 		// ※ここに書き込み処理を作成してください。(処理内容3-1)
 		BufferedWriter bw = null;
 		try {
@@ -267,7 +264,7 @@ public class CalculateSales {
 
 			//Mapから全てのKey取得
 			for (String key : names.keySet()) {
-				bw.write(key + "," + names.get(key) + "," + branchSales.get(key));
+				bw.write(key + "," + names.get(key) + "," + sales.get(key));
 				bw.newLine();
 			}
 
